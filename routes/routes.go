@@ -34,7 +34,7 @@ func New() *echo.Echo {
 	}
 	track := e.Group("/track")
 	{
-		track.GET("/jne", trackH.Track)
+		track.GET("/line", trackH.Track)
 	}
 
 	return e

@@ -11,13 +11,10 @@ import (
 
 func (r *resiRepository) Track(courier, awb string) (*dto.TrackingResponse, error) {
 	apiKey := os.Getenv("BINDERBYTE_API_KEY")
-	if apiKey == "" {
-		return nil, fmt.Errorf("BINDERBYTE_API_KEY not set")
-	}
-
 	baseURL := os.Getenv("BINDERBYTE_BASE_URL")
-	if baseURL == "" {
-		return nil, fmt.Errorf("BINDERBYTE_BASE_URL not set")
+
+	if apiKey == "" || baseURL == "" {
+		return nil, fmt.Errorf("env not set")
 	}
 
 	url := fmt.Sprintf(
@@ -31,10 +28,21 @@ func (r *resiRepository) Track(courier, awb string) (*dto.TrackingResponse, erro
 	}
 	defer resp.Body.Close()
 
-	var result dto.TrackingResponse
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+	var raw dto.TrackingRawResponse
+	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
 		return nil, err
 	}
 
-	return &result, nil
+	history := []dto.HistoryEntry{}
+	_ = json.Unmarshal(raw.Data.History, &history)
+
+	return &dto.TrackingResponse{
+		Status:  raw.Status,
+		Message: raw.Message,
+		Data: dto.Data{
+			Summary: raw.Data.Summary,
+			Detail:  raw.Data.Detail,
+			History: history,
+		},
+	}, nil
 }

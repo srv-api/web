@@ -1,5 +1,7 @@
 package dto
 
+import "encoding/json"
+
 type TrackingResponse struct {
 	Status  int    `json:"status"`
 	Message string `json:"message"`
@@ -34,4 +36,18 @@ type HistoryEntry struct {
 	Date     string `json:"date"`
 	Desc     string `json:"desc"`
 	Location string `json:"location"`
+}
+
+/* ===== RAW RESPONSE ===== */
+
+type TrackingRawResponse struct {
+	Status  int             `json:"status"`
+	Message string          `json:"message"`
+	Data    TrackingRawData `json:"data"`
+}
+
+type TrackingRawData struct {
+	Summary Summary         `json:"summary"`
+	Detail  Detail          `json:"detail"`
+	History json.RawMessage `json:"history"`
 }

@@ -12,7 +12,7 @@ func (h *trackingHandler) Track(c echo.Context) error {
 
 	if courier == "" || awb == "" {
 		return c.JSON(http.StatusBadRequest, echo.Map{
-			"message": "courier and awb are required",
+			"message": "courier and awb required",
 		})
 	}
 
