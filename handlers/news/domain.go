@@ -1,26 +1,21 @@
 package news
 
 import (
-	s "github.com/srv-api/web/services/web"
+	s "github.com/srv-api/web/services/news"
 
 	"github.com/labstack/echo/v4"
 )
 
 type DomainHandler interface {
 	Create(c echo.Context) error
-	Get(c echo.Context) error
-	GetById(c echo.Context) error
-	BulkDelete(c echo.Context) error
-	Delete(c echo.Context) error
-	Update(c echo.Context) error
 }
 
 type domainHandler struct {
-	serviceMerk s.MerkService
+	serviceNews s.NewsService
 }
 
-func NewMerkHandler(service s.MerkService) DomainHandler {
+func NewNewsHandler(service s.NewsService) DomainHandler {
 	return &domainHandler{
-		serviceMerk: service,
+		serviceNews: service,
 	}
 }

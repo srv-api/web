@@ -1,4 +1,4 @@
-package news
+package dto
 
 type CreateNewsRequest struct {
 	ID         string `json:"id"`

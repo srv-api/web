@@ -34,7 +34,7 @@ func (h *domainHandler) Create(c echo.Context) error {
 		return res.ErrorBuilder(&res.ErrorConstant.BadRequest, err).Send(c)
 	}
 
-	resp, err = h.serviceMerk.Create(req)
+	resp, err = h.serviceNews.Create(req)
 	if err != nil {
 		return res.ErrorResponse(err).Send(c)
 	}
