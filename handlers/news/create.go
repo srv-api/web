@@ -2,8 +2,8 @@ package news
 
 import (
 	"github.com/labstack/echo/v4"
+	res "github.com/srv-api/util/s/response"
 	dto "github.com/srv-api/web/dto"
-	res "github.com/srv-kirim/util/s/response"
 )
 
 func (h *domainHandler) Create(c echo.Context) error {
