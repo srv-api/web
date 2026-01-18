@@ -1,4 +1,4 @@
-package news
+package entity
 
 type NewsBlog struct {
 	ID        string `gorm:"primary_key;type:varchar(39)" json:"id"`

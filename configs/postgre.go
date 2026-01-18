@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
+	"github.com/srv-api/web/entity"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -50,6 +51,11 @@ func InitDB() *gorm.DB {
 
 	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 	sqlDB.SetConnMaxLifetime(time.Hour)
+
+	// Migrate the schema
+	db.AutoMigrate(
+		&entity.NewsBlog{},
+	)
 
 	return db
 }
