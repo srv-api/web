@@ -36,5 +36,5 @@ func (s *newsService) buildImageURL(path string) string {
 	if path == "" {
 		return ""
 	}
-	return fmt.Sprintf("https://api.cashpay.co.id/web/uploads/%s", path)
+	return fmt.Sprintf("https://api.cashpay.co.id/web/%s", path)
 }
