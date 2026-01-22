@@ -11,6 +11,7 @@ type DomainHandler interface {
 	List(c echo.Context) error
 	CreateComment(c echo.Context) error
 	Detail(c echo.Context) error
+	RedirectIDToSlug(c echo.Context) error
 }
 
 type domainHandler struct {

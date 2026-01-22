@@ -6,9 +6,9 @@ import (
 )
 
 func (h *domainHandler) Detail(c echo.Context) error {
-	id := c.Param("id")
+	slug := c.Param("slug")
 
-	data, err := h.serviceNews.Detail(id)
+	data, err := h.serviceNews.Detail(slug)
 	if err != nil {
 		return res.ErrorResponse(err).Send(c)
 	}

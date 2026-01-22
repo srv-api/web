@@ -12,7 +12,7 @@ type NewsService interface {
 	Create(req dto.CreateNewsRequest) (dto.CreateNewsResponse, error)
 	List() ([]dto.GetNewsListResponse, error)
 	CreateComment(blogID string, req dto.CreateCommentRequest) error
-	Detail(id string) (entity.NewsBlog, error)
+	Detail(slug string) (entity.NewsBlog, error)
 }
 
 type newsService struct {
