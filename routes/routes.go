@@ -27,7 +27,7 @@ var (
 
 func New() *echo.Echo {
 	e := echo.New()
-	e.Static("/news/uploads", "./uploads")
+	e.Static("/web/uploads", "./uploads")
 
 	news := e.Group("/web", middlewares.AuthorizeJWT(JWT))
 	{
