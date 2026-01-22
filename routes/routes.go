@@ -29,14 +29,14 @@ func New() *echo.Echo {
 	e := echo.New()
 	e.Static("/news/uploads", "./uploads")
 
-	news := e.Group("/news", middlewares.AuthorizeJWT(JWT))
+	news := e.Group("/web", middlewares.AuthorizeJWT(JWT))
 	{
 		news.POST("/create/news", newsH.Create)
 	}
 
-	track := e.Group("/track")
+	track := e.Group("/web")
 	{
-		track.GET("/line", trackH.Track)
+		track.GET("/track/line", trackH.Track)
 	}
 
 	return e
