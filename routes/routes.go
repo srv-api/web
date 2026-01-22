@@ -34,9 +34,10 @@ func New() *echo.Echo {
 		news.POST("/create/news", newsH.Create)
 	}
 
-	track := e.Group("/web")
+	web := e.Group("/web")
 	{
-		track.GET("/track/line", trackH.Track)
+		web.GET("/track/line", trackH.Track)
+		web.GET("/list/news", newsH.List)
 	}
 
 	return e

@@ -8,6 +8,7 @@ import (
 
 type DomainHandler interface {
 	Create(c echo.Context) error
+	List(c echo.Context) error
 }
 
 type domainHandler struct {

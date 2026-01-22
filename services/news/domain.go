@@ -9,6 +9,7 @@ import (
 
 type NewsService interface {
 	Create(req dto.CreateNewsRequest) (dto.CreateNewsResponse, error)
+	List() ([]dto.GetNewsListResponse, error)
 }
 
 type newsService struct {

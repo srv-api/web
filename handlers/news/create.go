@@ -15,45 +15,45 @@ import (
 func (h *domainHandler) Create(c echo.Context) error {
 	var resp dto.CreateNewsResponse
 
-	userid, ok := c.Get("UserId").(string)
-	if !ok {
-		return res.ErrorBuilder(&res.ErrorConstant.InternalServerError, nil).Send(c)
-	}
+	userid := c.Get("UserId").(string)
+	createdBy := c.Get("CreatedBy").(string)
+	merchantId := c.Get("MerchantId").(string)
 
-	createdBy, ok := c.Get("CreatedBy").(string)
-	if !ok {
-		return res.ErrorBuilder(&res.ErrorConstant.InternalServerError, nil).Send(c)
-	}
-
-	merchantId, ok := c.Get("MerchantId").(string)
-	if !ok {
-		return res.ErrorBuilder(&res.ErrorConstant.InternalServerError, nil).Send(c)
-	}
-
-	// Ambil field biasa
 	title := c.FormValue("title")
 	tag := c.FormValue("tag")
 	body := c.FormValue("body")
 	excerpt := c.FormValue("excerpt")
 	status := c.FormValue("status")
 
-	// Ambil file
 	file, err := c.FormFile("file")
 	if err != nil && err != http.ErrMissingFile {
 		return res.ErrorBuilder(&res.ErrorConstant.BadRequest, err).Send(c)
 	}
 
-	var filePath string
+	var fileName, filePath string
+
 	if file != nil {
-		// Simpan file ke folder tertentu, misal "./uploads/"
+		uploadDir := "uploads"
+
+		// 🔥 WAJIB
+		if err := os.MkdirAll(uploadDir, 0755); err != nil {
+			return res.ErrorBuilder(&res.ErrorConstant.InternalServerError, err).Send(c)
+		}
+
 		src, err := file.Open()
 		if err != nil {
 			return res.ErrorBuilder(&res.ErrorConstant.InternalServerError, err).Send(c)
 		}
 		defer src.Close()
 
-		// Bisa pakai nama unik
-		filePath = fmt.Sprintf("uploads/%s_%s", util.GenerateRandomString(), file.Filename)
+		fileName = file.Filename
+		filePath = fmt.Sprintf(
+			"%s/%s_%s",
+			uploadDir,
+			util.GenerateRandomString(),
+			file.Filename,
+		)
+
 		dst, err := os.Create(filePath)
 		if err != nil {
 			return res.ErrorBuilder(&res.ErrorConstant.InternalServerError, err).Send(c)
@@ -74,7 +74,8 @@ func (h *domainHandler) Create(c echo.Context) error {
 		Body:       body,
 		Excerpt:    excerpt,
 		Status:     status,
-		File:       filePath, // path file yang disimpan
+		FileName:   fileName,
+		FilePath:   filePath,
 	}
 
 	resp, err = h.serviceNews.Create(req)
