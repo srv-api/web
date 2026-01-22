@@ -1,18 +1,21 @@
 package dto
 
 type CreateNewsRequest struct {
-	ID         string `json:"id"`
-	UserID     string `json:"user_id"`
-	MerchantID string `json:"merchant_id"`
-	Tag        string `json:"tag"`
-	Title      string `json:"title"`
-	File       string `json:"file"`
-	Body       string `json:"body"`
-	Comment    string `json:"comment"`
-	Excerpt    string `json:"excerpt"`
-	Status     string `json:"status"`
-	CreatedBy  string `json:"created_by"`
-	CreatedAt  string `json:"created_at"`
+	ID              string `json:"id"`
+	UserID          string `json:"user_id"`
+	MerchantID      string `json:"merchant_id"`
+	Tag             string `json:"tag"`
+	Title           string `json:"title"`
+	File            string `json:"file"`
+	Body            string `json:"body"`
+	Comment         string `json:"comment"`
+	Excerpt         string `json:"excerpt"`
+	Slug            string `json:"slug"`
+	MetaTitle       string `json:"meta_title"`
+	MetaDescription string `json:"meta_description"`
+	Status          string `json:"status"`
+	CreatedBy       string `json:"created_by"`
+	CreatedAt       string `json:"created_at"`
 }
 
 type CreateNewsResponse struct {

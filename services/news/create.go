@@ -6,8 +6,6 @@ import (
 )
 
 func (s *newsService) Create(req dto.CreateNewsRequest) (dto.CreateNewsResponse, error) {
-
-	// Proses pembuatan data News
 	create := dto.CreateNewsRequest{
 		ID:         util.GenerateRandomString(),
 		UserID:     req.UserID,
