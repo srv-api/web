@@ -38,6 +38,8 @@ func New() *echo.Echo {
 	{
 		web.GET("/track/line", trackH.Track)
 		web.GET("/list/news", newsH.List)
+		web.POST("/:id/comment", newsH.CreateComment)
+		web.GET("/news/:id", newsH.Detail)
 	}
 
 	return e

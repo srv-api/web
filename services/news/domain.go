@@ -3,6 +3,7 @@ package news
 import (
 	m "github.com/srv-api/middlewares/middlewares"
 	dto "github.com/srv-api/web/dto"
+	"github.com/srv-api/web/entity"
 
 	r "github.com/srv-api/web/repositories/news"
 )
@@ -10,6 +11,8 @@ import (
 type NewsService interface {
 	Create(req dto.CreateNewsRequest) (dto.CreateNewsResponse, error)
 	List() ([]dto.GetNewsListResponse, error)
+	CreateComment(blogID string, req dto.CreateCommentRequest) error
+	Detail(id string) (entity.NewsBlog, error)
 }
 
 type newsService struct {

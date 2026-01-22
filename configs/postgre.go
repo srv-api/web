@@ -55,6 +55,7 @@ func InitDB() *gorm.DB {
 	// Migrate the schema
 	db.AutoMigrate(
 		&entity.NewsBlog{},
+		&entity.NewsComment{},
 	)
 
 	return db
