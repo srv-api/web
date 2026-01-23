@@ -11,6 +11,7 @@ type DomainRepository interface {
 	Create(req dto.CreateNewsRequest) (dto.CreateNewsResponse, error)
 	List() ([]entity.NewsBlog, error)
 	CreateComment(comment entity.NewsComment) error
+	FindBlogBySlug(slug string) (entity.NewsBlog, error)
 	Detail(slug string) (entity.NewsBlog, error)
 }
 
