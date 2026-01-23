@@ -7,14 +7,14 @@ import (
 )
 
 func (h *domainHandler) CreateComment(c echo.Context) error {
-	slug := c.Param("slug")
+	blogID := c.Param("id")
 
 	var req dto.CreateCommentRequest
 	if err := c.Bind(&req); err != nil {
 		return res.ErrorBuilder(&res.ErrorConstant.BadRequest, err).Send(c)
 	}
 
-	err := h.serviceNews.CreateComment(slug, req)
+	err := h.serviceNews.CreateComment(blogID, req)
 	if err != nil {
 		return res.ErrorResponse(err).Send(c)
 	}
