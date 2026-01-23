@@ -3,6 +3,7 @@ package news
 import (
 	"regexp"
 	"strings"
+	"unicode/utf8"
 
 	util "github.com/srv-api/util/s"
 	dto "github.com/srv-api/web/dto"
@@ -11,8 +12,10 @@ import (
 func (s *newsService) Create(req dto.CreateNewsRequest) (dto.CreateNewsResponse, error) {
 	req.ID = util.GenerateRandomString()
 
-	// 🔥 AUTO SLUG DARI TITLE
+	// 🔥 AUTO SEO
 	req.Slug = Slugify(req.Title)
+	req.MetaTitle = GenerateMetaTitle(req.Title)
+	req.MetaDescription = GenerateMetaDescription(req.Excerpt, req.Body)
 
 	created, err := s.Repo.Create(req)
 	if err != nil {
@@ -56,4 +59,35 @@ func Slugify(input string) string {
 	slug = strings.Trim(slug, "-")
 
 	return slug
+}
+
+const (
+	MaxMetaTitle       = 60
+	MaxMetaDescription = 160
+)
+
+func GenerateMetaTitle(title string) string {
+	title = strings.TrimSpace(title)
+
+	if utf8.RuneCountInString(title) <= MaxMetaTitle {
+		return title
+	}
+
+	return string([]rune(title)[:MaxMetaTitle-3]) + "..."
+}
+
+func GenerateMetaDescription(excerpt, body string) string {
+	desc := strings.TrimSpace(excerpt)
+
+	if desc == "" {
+		desc = strings.TrimSpace(body)
+	}
+
+	desc = strings.ReplaceAll(desc, "\n", " ")
+
+	if utf8.RuneCountInString(desc) <= MaxMetaDescription {
+		return desc
+	}
+
+	return string([]rune(desc)[:MaxMetaDescription-3]) + "..."
 }
