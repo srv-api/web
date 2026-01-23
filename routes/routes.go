@@ -38,10 +38,9 @@ func New() *echo.Echo {
 	{
 		web.GET("/track/line", trackH.Track)
 		web.GET("/list/news", newsH.List)
-		web.POST("/:id/comment", newsH.CreateComment)
+		web.POST("/news/:slug/comment", newsH.CreateComment)
 		web.GET("/news/:slug", newsH.Detail)
-		web.GET("/web/news/id/:id", newsH.RedirectIDToSlug)
-
+		web.GET("/news/id/:id", newsH.RedirectIDToSlug)
 	}
 
 	return e

@@ -6,10 +6,10 @@ import (
 	"github.com/srv-api/web/entity"
 )
 
-func (s *newsService) CreateComment(blogID string, req dto.CreateCommentRequest) error {
+func (s *newsService) CreateComment(slug string, req dto.CreateCommentRequest) error {
 	comment := entity.NewsComment{
 		ID:      uuid.NewString(),
-		BlogID:  blogID,
+		BlogID:  slug,
 		Name:    req.Name,
 		Email:   req.Email,
 		Comment: req.Comment,

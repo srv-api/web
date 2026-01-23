@@ -11,7 +11,7 @@ import (
 type NewsService interface {
 	Create(req dto.CreateNewsRequest) (dto.CreateNewsResponse, error)
 	List() ([]dto.GetNewsListResponse, error)
-	CreateComment(blogID string, req dto.CreateCommentRequest) error
+	CreateComment(slug string, req dto.CreateCommentRequest) error
 	Detail(slug string) (entity.NewsBlog, error)
 }
 
