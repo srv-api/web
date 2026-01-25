@@ -17,7 +17,7 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 	offset := (req.Page - 1) * req.Limit
 
 	find := r.DB.Preload("Category").Preload("Product").Preload("Image").
-		Where("merchant_slug = ? AND status = ?", req.MerchantSlug, 1).
+		Where("merchant_slug = ? AND products.status = ?", req.MerchantSlug, 1).
 		Limit(req.Limit).
 		Offset(offset).
 		Order(req.Sort)
