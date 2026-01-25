@@ -20,7 +20,7 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 	query := r.DB.
 		Model(&entity.MerchantDetail{}).
 		Distinct("merchant_details.id").
-		Joins("JOIN products ON products.merchant_detail_id = merchant_details.id").
+		Joins("JOIN products ON products.merchant_id = merchant_details.id").
 		Preload("Category").
 		Preload("Product", "status = ?", 1).
 		Preload("Image").
@@ -41,7 +41,7 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 	// =========================
 	if err := r.DB.
 		Model(&entity.MerchantDetail{}).
-		Joins("JOIN products ON products.merchant_detail_id = merchant_details.id").
+		Joins("JOIN products ON products.merchant_id = merchant_details.id").
 		Where("merchant_details.merchant_slug = ?", req.MerchantSlug).
 		Where("products.status = ?", 1).
 		Count(&totalRows).Error; err != nil {
