@@ -11,6 +11,10 @@ import (
 	h_track "github.com/srv-api/web/handlers/resi"
 	r_track "github.com/srv-api/web/repositories/resi"
 	s_track "github.com/srv-api/web/services/resi"
+
+	h_product "github.com/srv-api/web/handlers/product"
+	r_product "github.com/srv-api/web/repositories/product"
+	s_product "github.com/srv-api/web/services/product"
 )
 
 var (
@@ -23,11 +27,16 @@ var (
 	trackR = r_track.NewResiRepository(DB)
 	trackS = s_track.NewResiService(trackR, JWT)
 	trackH = h_track.NewResiHandler(trackS)
+
+	productR = r_product.NewProductRepository(DB)
+	productS = s_product.NewProductService(productR, JWT)
+	productH = h_product.NewProductHandler(productS)
 )
 
 func New() *echo.Echo {
 	e := echo.New()
 	e.Static("/web/uploads", "./uploads")
+	e.GET("/web/:merchant_slug", productH.Web)
 
 	news := e.Group("/web", middlewares.AuthorizeJWT(JWT))
 	{
