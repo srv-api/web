@@ -8,42 +8,50 @@ import (
 	"github.com/srv-api/web/dto"
 )
 
-func GeneratePaginationRequest(context echo.Context) *dto.Pagination {
-	// default limit, page & sort parameter
+// helpers/pagination.go
+func GeneratePaginationRequest(c echo.Context) *dto.Pagination {
 	limit := 10
 	page := 1
-	sort := "created_at desc"
+	sort := "merchant_details.created_at desc"
 
 	var searchs []dto.Search
-
-	query := context.QueryParams()
+	query := c.QueryParams()
 
 	for key, values := range query {
-		queryValue := values[len(values)-1]
+		val := values[len(values)-1]
 
 		switch key {
 		case "limit":
-			limit, _ = strconv.Atoi(queryValue)
+			if v, err := strconv.Atoi(val); err == nil && v > 0 {
+				limit = v
+			}
 		case "page":
-			page, _ = strconv.Atoi(queryValue)
+			if v, err := strconv.Atoi(val); err == nil && v > 0 {
+				page = v
+			}
 		case "sort":
-			sort = queryValue
-		}
-
-		// check if query parameter key contains dot
-		if strings.Contains(key, ".") {
-			// split query parameter key by dot
-			searchKeys := strings.Split(key, ".")
-
-			// create search object
-			search := dto.Search{Column: searchKeys[0], Action: searchKeys[1], Query: queryValue}
-
-			// add search object to searchs array
-			searchs = append(searchs, search)
+			// ⛔ whitelist biar ga SQL injection
+			if strings.Contains(val, "created_at") {
+				sort = val
+			}
+		default:
+			if strings.Contains(key, ".") {
+				s := strings.Split(key, ".")
+				searchs = append(searchs, dto.Search{
+					Column: s[0],
+					Action: s[1],
+					Query:  val,
+				})
+			}
 		}
 	}
 
-	return &dto.Pagination{Limit: limit, Page: page, Sort: sort, Searchs: searchs}
+	return &dto.Pagination{
+		Limit:   limit,
+		Page:    page,
+		Sort:    sort,
+		Searchs: searchs,
+	}
 }
 
 func TruncateString(input string, length int) string {

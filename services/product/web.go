@@ -7,21 +7,34 @@ import (
 	dto "github.com/srv-api/web/dto"
 )
 
+// services/product/web.go
 func (s *productService) Web(ctx echo.Context, req *dto.Pagination) dto.Response {
 	if req.Page < 1 {
 		req.Page = 1
 	}
 
-	operationResult, totalPages := s.Repo.Web(req)
+	repoResult, totalPages := s.Repo.Web(req)
 
-	data := operationResult.Result.(*dto.Pagination)
+	if repoResult.Error != nil {
+		return dto.Response{
+			Success: false,
+			Message: repoResult.Error.Error(),
+		}
+	}
 
-	urlPath := ctx.Request().URL.Path // /merchant-name
+	data, ok := repoResult.Result.(*dto.Pagination)
+	if !ok || data == nil {
+		return dto.Response{
+			Success: false,
+			Message: "invalid pagination result",
+		}
+	}
+
+	urlPath := ctx.Request().URL.Path
 	baseQuery := fmt.Sprintf("?limit=%d", req.Limit)
 
-	// optional search
-	for _, search := range req.Searchs {
-		baseQuery += fmt.Sprintf("&%s.%s=%s", search.Column, search.Action, search.Query)
+	for _, s := range req.Searchs {
+		baseQuery += fmt.Sprintf("&%s.%s=%s", s.Column, s.Action, s.Query)
 	}
 
 	data.FirstPage = fmt.Sprintf("%s%s&page=1", urlPath, baseQuery)
