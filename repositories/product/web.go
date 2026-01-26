@@ -13,6 +13,7 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 	var totalRows int64
 
 	offset := (req.Page - 1) * req.Limit
+
 	sort := req.Sort
 	if sort == "" {
 		sort = "merchant_details.created_at desc"
@@ -21,13 +22,13 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 	// ================= DATA =================
 	err := r.DB.
 		Model(&entity.MerchantDetail{}).
-		Distinct("merchant_details.id").
 		Joins("JOIN products ON products.merchant_id = merchant_details.id").
 		Preload("Category").
 		Preload("Product", "products.status = ?", 1).
 		Preload("Image").
 		Where("merchant_details.merchant_slug = ?", req.MerchantSlug).
 		Where("products.status = ?", 1).
+		Group("merchant_details.id").
 		Order(sort).
 		Limit(req.Limit).
 		Offset(offset).
@@ -45,6 +46,7 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 		Joins("JOIN products ON products.merchant_id = merchant_details.id").
 		Where("merchant_details.merchant_slug = ?", req.MerchantSlug).
 		Where("products.status = ?", 1).
+		Group("merchant_details.id").
 		Count(&totalRows).Error
 
 	if err != nil {
