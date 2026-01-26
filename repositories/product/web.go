@@ -3,7 +3,6 @@ package product
 import (
 	"math"
 
-	merchant "github.com/srv-api/merchant/entity"
 	"github.com/srv-api/product/entity"
 	dto "github.com/srv-api/web/dto"
 )
@@ -11,12 +10,13 @@ import (
 // repositories/product/web.go
 func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 	var (
-		merchant  merchant.MerchantDetail
+		merchant  entity.MerchantDetail
 		products  []entity.Product
 		totalRows int64
 	)
 
 	offset := (req.Page - 1) * req.Limit
+
 	sort := req.Sort
 	if sort == "" {
 		sort = "products.created_at desc"
@@ -52,21 +52,18 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 		return RepositoryResult{Error: err}, 0
 	}
 
-	// ================= PAGINATION =================
-	req.Rows = products
-	req.TotalRows = int(totalRows)
-	req.TotalPages = int(math.Ceil(float64(totalRows) / float64(req.Limit)))
-	req.FromRow = offset + 1
-	req.ToRow = offset + req.Limit
-	if req.ToRow > int(totalRows) {
-		req.ToRow = int(totalRows)
+	pagination := map[string]interface{}{
+		"page":        req.Page,
+		"limit":       req.Limit,
+		"total_rows":  totalRows,
+		"total_pages": int(math.Ceil(float64(totalRows) / float64(req.Limit))),
 	}
 
 	return RepositoryResult{
 		Result: map[string]interface{}{
 			"merchant":   merchant,
 			"products":   products,
-			"pagination": req,
+			"pagination": pagination,
 		},
-	}, req.TotalPages
+	}, pagination["total_pages"].(int)
 }
