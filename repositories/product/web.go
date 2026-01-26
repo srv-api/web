@@ -14,23 +14,28 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 
 	sort := req.Sort
 	if sort == "" {
-		sort = "merchant_details.created_at desc"
+		sort = "products.created_at desc"
 	}
 
 	// ================= DATA =================
 	err := r.DB.
 		Table("merchant_details").
 		Select(`
-            merchant_details.id            AS merchant_id,
+            merchant_details.id              AS merchant_id,
             merchant_details.merchant_name,
             merchant_details.merchant_slug,
-            products.id                    AS product_id,
+
+            products.id                      AS product_id,
             products.product_name,
             products.price,
             products.stock,
-            products.created_at            AS product_created_at
+
+            uploaded_files.id                AS image_id,
+            uploaded_files.file_path         AS image_path,
+            uploaded_files.file_name         AS image_name
         `).
 		Joins("JOIN products ON products.merchant_id = merchant_details.id").
+		Joins("LEFT JOIN uploaded_files ON uploaded_files.product_id = products.id").
 		Where("merchant_details.merchant_slug = ?", req.MerchantSlug).
 		Where("products.status = ?", 1).
 		Order(sort).
