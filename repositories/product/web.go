@@ -25,7 +25,7 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 		Joins("JOIN products ON products.merchant_id = merchant_details.id").
 		Preload("Products.Category").
 		Preload("Products", "products.status = ?", 1).
-		Preload("Image").
+		Preload("Products.Image").
 		Where("merchant_details.merchant_slug = ?", req.MerchantSlug).
 		Where("products.status = ?", 1).
 		Group("merchant_details.id").
