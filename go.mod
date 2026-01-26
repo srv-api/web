@@ -1,22 +1,21 @@
 module github.com/srv-api/web
 
-go 1.24.4
-
-toolchain go1.24.12
+go 1.25.1
 
 require (
+	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.15.0
-	github.com/srv-api/merchant v0.0.0-20260118100625-2157c2d7a13f
+	github.com/srv-api/merchant v0.0.0-20260125075843-5cd84f6d3be2
 	github.com/srv-api/middlewares v0.0.0-20260118094353-3c21604ff12e
-	github.com/srv-api/util v0.0.0-20260118092709-27b0e77af41d
+	github.com/srv-api/product v0.0.0-20260125091834-fd132c217c98
+	github.com/srv-api/util v0.0.0-20260118105025-cdb334ac3c2f
 	gorm.io/driver/postgres v1.6.0
 	gorm.io/gorm v1.31.1
 )
 
 require (
 	github.com/golang-jwt/jwt/v4 v4.5.2 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/h2non/filetype v1.1.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
@@ -34,6 +33,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e // indirect
+	github.com/srv-api/auth v0.0.0-20260118110236-988ac8498d98 // indirect
 	github.com/streadway/amqp v1.1.0 // indirect
 	github.com/teris-io/shortid v0.0.0-20220617161101-71ec9f2aa569 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
