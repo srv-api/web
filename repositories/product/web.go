@@ -3,6 +3,8 @@ package product
 import (
 	"math"
 
+	merchant "github.com/srv-api/merchant/entity"
+
 	"github.com/srv-api/product/entity"
 	dto "github.com/srv-api/web/dto"
 )
@@ -10,7 +12,7 @@ import (
 // repositories/product/web.go
 func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 	var (
-		merchant  entity.MerchantDetail
+		merchant  merchant.MerchantDetail
 		products  []entity.Product
 		totalRows int64
 	)
