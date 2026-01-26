@@ -23,8 +23,8 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 	err := r.DB.
 		Model(&entity.MerchantDetail{}).
 		Joins("JOIN products ON products.merchant_id = merchant_details.id").
-		Preload("Category").
-		Preload("Product", "products.status = ?", 1).
+		Preload("Products.Category").
+		Preload("Products", "products.status = ?", 1).
 		Preload("Image").
 		Where("merchant_details.merchant_slug = ?", req.MerchantSlug).
 		Where("products.status = ?", 1).
