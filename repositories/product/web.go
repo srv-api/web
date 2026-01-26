@@ -3,13 +3,11 @@ package product
 import (
 	"math"
 
-	"github.com/srv-api/merchant/entity"
 	dto "github.com/srv-api/web/dto"
 )
 
-// repositories/product/web.go
 func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
-	var merchants []entity.MerchantDetail
+	var rows []map[string]interface{}
 	var totalRows int64
 
 	offset := (req.Page - 1) * req.Limit
@@ -21,32 +19,37 @@ func (r *productRepository) Web(req *dto.Pagination) (RepositoryResult, int) {
 
 	// ================= DATA =================
 	err := r.DB.
-		Model(&entity.MerchantDetail{}).
+		Table("merchant_details").
+		Select(`
+            merchant_details.id            AS merchant_id,
+            merchant_details.merchant_name,
+            merchant_details.merchant_slug,
+            products.id                    AS product_id,
+            products.product_name,
+            products.price,
+            products.stock,
+            products.created_at            AS product_created_at
+        `).
 		Joins("JOIN products ON products.merchant_id = merchant_details.id").
-		Preload("Products.Category").
-		Preload("Products", "products.status = ?", 1).
-		Preload("Products.Image").
 		Where("merchant_details.merchant_slug = ?", req.MerchantSlug).
 		Where("products.status = ?", 1).
-		Group("merchant_details.id").
 		Order(sort).
 		Limit(req.Limit).
 		Offset(offset).
-		Find(&merchants).Error
+		Scan(&rows).Error
 
 	if err != nil {
 		return RepositoryResult{Error: err}, 0
 	}
 
-	req.Rows = merchants
+	req.Rows = rows
 
 	// ================= COUNT =================
 	err = r.DB.
-		Model(&entity.MerchantDetail{}).
+		Table("merchant_details").
 		Joins("JOIN products ON products.merchant_id = merchant_details.id").
 		Where("merchant_details.merchant_slug = ?", req.MerchantSlug).
 		Where("products.status = ?", 1).
-		Group("merchant_details.id").
 		Count(&totalRows).Error
 
 	if err != nil {
